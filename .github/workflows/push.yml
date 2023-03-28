@@ -17,7 +17,7 @@ jobs:
         name: set up jdk
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 11
           cache: maven
 
       - name: build with maven
