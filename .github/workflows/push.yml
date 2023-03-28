@@ -1,0 +1,40 @@
+name: Fruits App Push Build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: 17
+    name: build with jdk ${{matrix.java}}
+
+    steps:
+      - uses: actions/checkout@v2
+        name: checkout
+
+      - uses: actions/setup-java@v2
+        name: set up jdk ${{matrix.java}}
+        with:
+          distribution: temurin
+          java-version: ${{matrix.java}}
+          cache: maven
+
+      - name: build with maven
+        run: mvn clean install
+
+      - name: Quay.io Login
+        run: docker login quay.io -u="${{secrets.QUAY_USER}}" -p="${{secrets.QUAY_TOKEN}}"
+
+      - name: Push
+        run: mvn clean install -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.registry=quay.io -Dquarkus.container-image.group=halkyonio -Dquarkus.container-image.tag=latest
+        
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.REPO_TOKEN }}
+          repository: halkyonio/helm-charts
+          event-type: update_charts

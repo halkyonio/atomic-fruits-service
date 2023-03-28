@@ -1,0 +1,6 @@
+---
+db:
+  auth:
+    database: fruits_database
+    password: pwd
+    username: user
