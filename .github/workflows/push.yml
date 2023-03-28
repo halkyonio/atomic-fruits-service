@@ -7,20 +7,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: 17
-    name: build with jdk ${{matrix.java}}
+    name: build with jdk
 
     steps:
       - uses: actions/checkout@v2
         name: checkout
 
       - uses: actions/setup-java@v2
-        name: set up jdk ${{matrix.java}}
+        name: set up jdk
         with:
           distribution: temurin
-          java-version: ${{matrix.java}}
+          java-version: 17
           cache: maven
 
       - name: build with maven
