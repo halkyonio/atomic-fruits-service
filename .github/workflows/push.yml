@@ -27,7 +27,7 @@ jobs:
         run: docker login quay.io -u="${{secrets.QUAY_USER}}" -p="${{secrets.QUAY_TOKEN}}"
 
       - name: Push
-        run: mvn clean install -DskipTests -Dquarkus.profile=helm -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.registry=quay.io -Dquarkus.container-image.group=halkyonio -Dquarkus.container-image.tag=latest
+        run: mvn clean install -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.registry=quay.io -Dquarkus.container-image.group=halkyonio -Dquarkus.container-image.tag=latest
         
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2

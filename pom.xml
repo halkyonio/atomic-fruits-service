@@ -50,6 +50,11 @@
       <artifactId>quarkus-kubernetes</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.quarkiverse.helm</groupId>
+      <artifactId>quarkus-helm</artifactId>
+      <version>${quarkus-helm.version}</version>
+    </dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-container-image-jib</artifactId>
     </dependency>
@@ -137,22 +142,6 @@
         <skipITs>false</skipITs>
         <quarkus.package.type>native</quarkus.package.type>
       </properties>
-    </profile>
-    <profile>
-      <id>helm</id>
-      <activation>
-        <property>
-          <name>quarkus.profile</name>
-          <value>helm</value>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>io.quarkiverse.helm</groupId>
-          <artifactId>quarkus-helm</artifactId>
-          <version>${quarkus-helm.version}</version>
-        </dependency>
-      </dependencies>
     </profile>
   </profiles>
 </project>
