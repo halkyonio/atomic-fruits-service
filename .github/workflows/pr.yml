@@ -1,0 +1,41 @@
+name: Pull Request Build
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify-fruits:
+    name: Verify Fruits Chart in Kubernetes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Kubernetes KinD Cluster
+        uses: container-tools/kind-action@v1
+        with:
+          version: v0.11.1
+          registry: true
+
+      - name: Build
+        run: ./mvnw clean install
+
+      - name: Push image into local registry
+        run: ./mvnw clean install -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.registry=$KIND_REGISTRY -Dquarkus.container-image.group=local -Dquarkus.container-image.tag=latest -Dquarkus.container-image.insecure=true
+
+      - name: Start Fruits with database from Helm dependency
+        run: |
+          KUBERNETES_NAMESPACE=fruits
+          kubectl create namespace $KUBERNETES_NAMESPACE
+
+          # Install
+          helm install fruits-app ./target/helm/kubernetes/fruits-app --dependency-update -n $KUBERNETES_NAMESPACE --set app.image=$KIND_REGISTRY/local/atomic-fruits:latest --set app.serviceBinding.enabled=false
+          kubectl wait --for=condition=ready --timeout=5m pod -l app.kubernetes.io/name=db -n $KUBERNETES_NAMESPACE
+          kubectl wait deployment atomic-fruits --for condition=Available=True --timeout=5m -n $KUBERNETES_NAMESPACE
+
+      - name: (Only if it failed) Log Fruits traces at failures
+        if: failure()
+        run: |
+          KUBERNETES_NAMESPACE=fruits
+          POD_NAME=$(kubectl get pod -l app.kubernetes.io/name=atomic-fruits -n $KUBERNETES_NAMESPACE -o name)
+          kubectl logs $POD_NAME -n $KUBERNETES_NAMESPACE
+          kubectl describe $POD_NAME -n $KUBERNETES_NAMESPACE
