@@ -13,7 +13,7 @@
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.version>3.0.0.CR2</quarkus.platform.version>
-    <quarkus-helm.version>1.0.3</quarkus-helm.version>
+    <quarkus-helm.version>1.0.5</quarkus-helm.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
   </properties>
