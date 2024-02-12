@@ -10,7 +10,7 @@ jobs:
     name: build with jdk
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         name: checkout
 
       - uses: actions/setup-java@v4
