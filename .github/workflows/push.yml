@@ -14,10 +14,10 @@ jobs:
         name: checkout
 
       - uses: actions/setup-java@v2
-        name: set up jdk
+        name: set up jdk 17
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
           cache: maven
 
       - name: build with maven
