@@ -40,12 +40,13 @@ jobs:
           # Install
           helm install fruits-app ./target/helm/kubernetes/fruits-app --dependency-update -n $KUBERNETES_NAMESPACE --set app.image=$KIND_REGISTRY/local/atomic-fruits:latest --set app.serviceBinding.enabled=false
           kubectl wait --for=condition=ready --timeout=5m pod -l app.kubernetes.io/name=db -n $KUBERNETES_NAMESPACE
-          kubectl wait deployment atomic-fruits --for condition=Available=True --timeout=5m -n $KUBERNETES_NAMESPACE
+          kubectl wait deployment atomic-fruits-service --for condition=Available=True --timeout=5m -n $KUBERNETES_NAMESPACE
 
       - name: (Only if it failed) Log Fruits traces at failures
         if: failure()
         run: |
           KUBERNETES_NAMESPACE=fruits
-          POD_NAME=$(kubectl get pod -l app.kubernetes.io/name=atomic-fruits -n $KUBERNETES_NAMESPACE -o name)
-          kubectl logs $POD_NAME -n $KUBERNETES_NAMESPACE
+          kubectl get pods -n $KUBERNETES_NAMESPACE
+          POD_NAME=$(kubectl get pod -l app.kubernetes.io/name=atomic-fruits-service -n $KUBERNETES_NAMESPACE -o name)
           kubectl describe $POD_NAME -n $KUBERNETES_NAMESPACE
+          kubectl logs $POD_NAME -n $KUBERNETES_NAMESPACE
