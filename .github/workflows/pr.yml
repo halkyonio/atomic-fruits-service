@@ -9,12 +9,19 @@ jobs:
     name: Verify Fruits Chart in Kubernetes
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Kubernetes KinD Cluster
         uses: container-tools/kind-action@v1
         with:
           version: v0.11.1
           registry: true
+
+      - uses: actions/setup-java@v4
+        name: set up jdk 17
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
 
       - name: Show mvn version
         run: ./mvnw -version
