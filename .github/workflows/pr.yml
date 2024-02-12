@@ -16,6 +16,9 @@ jobs:
           version: v0.11.1
           registry: true
 
+      - name: Show mvn version
+        run: ./mvnw -version
+
       - name: Build
         run: ./mvnw clean install
 
