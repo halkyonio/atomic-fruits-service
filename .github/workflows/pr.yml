@@ -20,7 +20,7 @@ jobs:
         run: ./mvnw -version
 
       - name: Build
-        run: ./mvnw -X clean install
+        run: ./mvnw -B clean install
 
       - name: Push image into local registry
         run: ./mvnw clean install -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.registry=$KIND_REGISTRY -Dquarkus.container-image.group=local -Dquarkus.container-image.tag=latest -Dquarkus.container-image.insecure=true
