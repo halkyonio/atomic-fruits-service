@@ -36,6 +36,9 @@ jobs:
         run: |
           KUBERNETES_NAMESPACE=fruits
           kubectl create namespace $KUBERNETES_NAMESPACE
+          
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
 
           # Install
           helm install fruits-app ./target/helm/kubernetes/fruits-app --dependency-update -n $KUBERNETES_NAMESPACE --set app.image=$KIND_REGISTRY/local/atomic-fruits:latest --set app.serviceBinding.enabled=false
