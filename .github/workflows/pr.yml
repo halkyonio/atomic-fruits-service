@@ -9,7 +9,7 @@ jobs:
     name: Verify Fruits Chart in Kubernetes
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Kubernetes KinD Cluster
         uses: container-tools/kind-action@v2
         with:
