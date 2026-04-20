@@ -36,9 +36,19 @@ jobs:
         run: |
           KUBERNETES_NAMESPACE=fruits
           kubectl create namespace $KUBERNETES_NAMESPACE
+          
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
 
           # Install
           helm install fruits-app ./target/helm/kubernetes/fruits-app --dependency-update -n $KUBERNETES_NAMESPACE --set app.image=$KIND_REGISTRY/local/atomic-fruits:latest --set app.serviceBinding.enabled=false
+          kubectl get pods -n fruits
+          kubectl describe pod fruits-app-db-0 -n fruits
+          kubectl logs fruits-app-db-0 -n fruits
+          
+          helm upgrade --install fruits-app bitnami/postgresql --namespace fruits --set primary.persistence.enabled=false
+  
+  
           kubectl wait --for=condition=ready --timeout=5m pod -l app.kubernetes.io/name=db -n $KUBERNETES_NAMESPACE
           kubectl wait deployment atomic-fruits-service --for condition=Available=True --timeout=5m -n $KUBERNETES_NAMESPACE
 
